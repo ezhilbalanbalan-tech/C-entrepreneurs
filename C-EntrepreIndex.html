@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-Entrepreneurs | Execution Over Theory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1B365D', 
+                            orange: '#F15A24', 
+                            slate: '#F8FAFC'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(241, 90, 36, 0.1), transparent), 
+                        linear-gradient(135deg, #0f172a 0%, #1B365D 100%);
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #F15A24;
+            transition: width .3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+        .logo-box {
+            background: #F15A24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            color: white;
+        }
+        .terms-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .terms-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-brand-slate text-slate-900 antialiased">
+
+    <!-- TERMS MODAL -->
+    <div id="termsModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-brand-slate">
+                <h2 class="text-2xl font-black text-brand-blue tracking-tight">Terms & Conditions</h2>
+                <button onclick="toggleTerms()" class="text-slate-400 hover:text-brand-orange transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-8 overflow-y-auto terms-scroll text-slate-600 leading-relaxed text-sm space-y-6">
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">1. Confidentiality & Intellectual Property Protection</h3>
+                    <p>C-Entrepreneurs strictly respects and protects client confidentiality. Any business ideas, concepts, strategies, documents, or information shared by the client will not be disclosed, copied, reused, or shared with third parties without the client’s written consent. All client ideas and proprietary information remain the exclusive intellectual property of the client, unless otherwise defined in a mutually signed agreement.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">2. Non-Disclosure Assurance</h3>
+                    <p>C-Entrepreneurs commits to maintaining full confidentiality throughout and after the engagement. Internal access to client information is limited strictly to execution requirements. Any breach of confidentiality will be treated as a serious violation.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">3. Scope of Services</h3>
+                    <p>All services provided by C-Entrepreneurs are customized based on the client’s needs. The exact scope of services, responsibilities, timelines, and deliverables will be clearly defined in a formal contract or service agreement before commencement of work.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">4. Payments & Commercial Terms</h3>
+                    <p>All payment terms, pricing models, milestones, refunds (if any), and financial obligations will be clearly outlined in written agreements. No services shall be rendered without mutual agreement on commercial terms.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">5. Contract-Based Engagement</h3>
+                    <p>C-Entrepreneurs operates strictly on an agreement-based engagement model. All operational authority, execution responsibilities, management involvement, and decision-making rights are governed by the signed contract between both parties.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">6. Execution Responsibility & Limitations</h3>
+                    <p>While C-Entrepreneurs provides execution, management support, and strategic guidance, business outcomes may depend on multiple external and internal factors. Liability is limited to the scope defined within the agreement.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">7. Termination</h3>
+                    <p>Either party may terminate the engagement as per the termination clause defined in the contract. Confidentiality obligations remain valid even after termination.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">8. Amendments</h3>
+                    <p>Any changes to services, scope, or commercial terms must be documented and approved by both parties in writing.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">9. Governing Law</h3>
+                    <p>All agreements and engagements are governed by applicable local laws as specified in the contract.</p>
+                </section>
+                <section>
+                    <h3 class="font-bold text-brand-blue mb-2">10. Acceptance</h3>
+                    <p>By engaging with C-Entrepreneurs or submitting information through this website, the client acknowledges and agrees to these terms and conditions.</p>
+                </section>
+            </div>
+            <div class="p-8 bg-brand-slate text-center">
+                <button onclick="toggleTerms()" class="bg-brand-blue text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="logo-box w-10 h-10 text-xl">C</div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl font-extrabold tracking-tighter text-brand-blue uppercase">C-Entrepreneurs</span>
+                        <span class="text-[10px] font-bold text-brand-orange tracking-[0.2em] uppercase mt-0.5">Execution Service Provider</span>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-10 text-sm font-bold text-brand-blue uppercase tracking-wider">
+                    <a href="#about" class="nav-link">The Concept</a>
+                    <a href="#services" class="nav-link">Execution</a>
+                    <a href="#mission" class="nav-link">Mission</a>
+                    <a href="#contact" class="bg-brand-orange text-white px-7 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">Partner With Us</a>
+                </div>
+
+                <button class="lg:hidden text-brand-blue" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-6 space-y-4 text-center">
+            <a href="#about" class="block text-lg font-bold text-brand-blue">Concept</a>
+            <a href="#services" class="block text-lg font-bold text-brand-blue">Execution</a>
+            <a href="#contact" class="block bg-brand-orange text-white py-4 rounded-xl font-bold mx-4">Partner With Us</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative min-h-screen flex items-center pt-20 hero-gradient text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center lg:text-left">
+            <div class="max-w-4xl">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md">
+                    <span class="w-2 h-2 bg-brand-orange rounded-full animate-pulse"></span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-orange-200">Execution Service Provider (ESP)</span>
+                </div>
+                <h1 class="text-5xl md:text-8xl font-extrabold leading-[0.9] mb-8 tracking-tighter">
+                    We Build. <br>
+                    We Revive. <br>
+                    <span class="text-brand-orange">We Execute.</span>
+                </h1>
+                <p class="text-lg md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-2xl font-light">
+                    Turning ideas into real, functioning companies. We handle the <strong>hands-on execution</strong>, management, and operations.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+                    <a href="#contact" class="px-10 py-5 bg-brand-orange rounded-2xl font-extrabold text-center hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 text-lg uppercase">Launch Your Venture</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- THE CONCEPT -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Concept</h2>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue leading-tight mb-8 tracking-tight">
+                        From raw ideas to <span class="text-brand-orange">functioning reality.</span>
+                    </h3>
+                    <div class="space-y-6 text-slate-600 text-lg leading-relaxed">
+                        <p>
+                            C-Entrepreneurs is an <strong>Entrepreneurship Service Provider (ESP)</strong> that helps individuals and struggling businesses turn ideas into real companies. Instead of offering only advice, we take <strong>hands-on responsibility</strong> for execution, management, and operations.
+                        </p>
+                        <p>
+                            We support non-management founders, launch new ventures, and revive declining businesses through structured execution, strategic decision-making, and operational setup. Our engagement is customized, agreement-based, and focused on real results — <strong>execution over theory.</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-brand-blue p-12 rounded-[3rem] shadow-2xl relative text-white">
+                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-brand-orange rounded-full flex items-center justify-center text-white font-black text-xs text-center p-2 uppercase tracking-tighter">Agreement Based</div>
+                    <h4 class="text-2xl font-bold mb-6 text-orange-400 uppercase tracking-tighter">Confidentiality Assured</h4>
+                    <p class="text-xl font-light leading-relaxed mb-8 italic">
+                        "Any business ideas, concepts, or strategies shared remain the exclusive intellectual property of the client. We protect your vision as if it were our own."
+                    </p>
+                    <button onclick="toggleTerms()" class="text-brand-orange font-bold uppercase tracking-[0.2em] text-[10px] hover:underline">View Full Terms & Conditions</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXECUTION SERVICES -->
+    <section id="services" class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-black text-brand-blue tracking-tighter">Execution Framework</h2>
+                <div class="w-24 h-2 bg-brand-orange mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 service-card transition-all duration-300">
+                    <h3 class="text-2xl font-bold text-brand-blue mb-4">Strategic Setup</h3>
+                    <p class="text-slate-500 leading-relaxed">Handling research, business modeling, and legal registration to give your idea a professional foundation.</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 service-card transition-all duration-300">
+                    <h3 class="text-2xl font-bold text-brand-blue mb-4">Operations Build</h3>
+                    <p class="text-slate-500 leading-relaxed">Building management structures, hiring, and operational workflows for autonomous functioning.</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 service-card transition-all duration-300">
+                    <h3 class="text-2xl font-bold text-brand-blue mb-4">Business Revival</h3>
+                    <p class="text-slate-500 leading-relaxed">Identifying points of failure and executing a recovery roadmap to rescue declining operations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT FORM -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-slate rounded-[3rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-slate-200">
+                <div class="lg:w-1/3 bg-brand-orange p-12 text-white flex flex-col justify-center text-center">
+                    <h2 class="text-3xl font-black mb-6">Partner With Us</h2>
+                    <p class="text-orange-100 text-sm font-medium mb-8 leading-relaxed">
+                        C-Entrepreneurs operates strictly on an agreement-based model. Share your vision to begin.
+                    </p>
+                    <div class="pt-6 border-t border-white/20">
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold opacity-70">Corporate Unit</p>
+                        <p class="font-bold">C-Entrepreneurs ESP</p>
+                    </div>
+                </div>
+
+                <div class="lg:w-2/3 p-12 bg-white">
+                    <form id="leadForm">
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <label class="text-[10px] uppercase tracking-widest font-black text-slate-400 block mb-2">Name</label>
+                                <input id="userName" type="text" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none transition font-medium" placeholder="Full Name">
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase tracking-widest font-black text-slate-400 block mb-2">Email</label>
+                                <input id="userEmail" type="email" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none transition font-medium" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="text-[10px] uppercase tracking-widest font-black text-slate-400 block mb-2">Project Details</label>
+                            <textarea id="userMessage" rows="4" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none transition font-medium" placeholder="Describe your idea or business challenge..."></textarea>
+                        </div>
+                        
+                        <!-- Acceptance Checkbox -->
+                        <div class="mb-8 flex items-start gap-3">
+                            <input type="checkbox" required id="termsAccepted" class="mt-1 w-4 h-4 text-brand-orange border-slate-300 rounded focus:ring-brand-orange cursor-pointer">
+                            <label for="termsAccepted" class="text-xs text-slate-500 leading-normal">
+                                I acknowledge that by submitting this information, I agree to the <button type="button" onclick="toggleTerms()" class="text-brand-orange font-bold hover:underline">Terms & Conditions</button>, including non-disclosure and IP protection.
+                            </label>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full py-5 bg-brand-blue text-white font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition shadow-xl shadow-brand-blue/20">
+                            Request Execution Plan
+                        </button>
+                    </form>
+                    <div id="successMessage" class="hidden text-center py-20">
+                        <h3 class="text-3xl font-black text-brand-blue">Strategy Request Received</h3>
+                        <p class="mt-4 text-slate-500">Our execution team will reach out directly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-blue text-white py-20 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                <div class="max-w-md">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="logo-box w-8 h-8 text-sm">C</div>
+                        <span class="text-xl font-extrabold tracking-tighter uppercase">C-ENTREPRENEURS</span>
+                    </div>
+                    <div class="space-y-4 pt-6 border-t border-white/10">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-brand-orange">Direct Contact</p>
+                        <a href="tel:+919025360572" class="block text-2xl font-black hover:text-brand-orange transition">+91 90253 60572</a>
+                        <a href="mailto:centrepreneursb2c@gmail.com" class="block text-blue-200 hover:text-white transition font-medium italic text-sm">centrepreneursb2c@gmail.com</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-[10px] uppercase tracking-widest font-black text-brand-orange mb-6">Legal</h4>
+                    <button onclick="toggleTerms()" class="text-sm font-semibold text-blue-100 hover:text-brand-orange transition">Terms & Conditions</button>
+                </div>
+            </div>
+            <div class="mt-20 pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-300/50 flex flex-col md:flex-row justify-between gap-4">
+                <p>&copy; 2024 C-Entrepreneurs ESP. All rights reserved.</p>
+                <p>Execution Over Theory</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+  apiKey: "AIzaSyBZn3JWi1U0u5EtsQIbyvPYCpHTSc-Dy_Q",
+  authDomain: "c-entrepreneurs-4aaf5.firebaseapp.com",
+  projectId: "c-entrepreneurs-4aaf5",
+  storageBucket: "c-entrepreneurs-4aaf5.firebasestorage.app",
+  messagingSenderId: "479491068986",
+  appId: "1:479491068986:web:ccd193f25274f5c6565103"
+};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => { currentUser = user; });
+        async function initAuth() { try { await signInAnonymously(auth); } catch(e) {} }
+        initAuth();
+
+        // Terms Toggle
+        window.toggleTerms = function() {
+            const modal = document.getElementById('termsModal');
+            modal.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        // Form Submission
+        const leadForm = document.getElementById('leadForm');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting...";
+
+            try {
+                const inquiriesRef = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
+                await addDoc(inquiriesRef, {
+                    name: document.getElementById('userName').value,
+                    email: document.getElementById('userEmail').value,
+                    message: document.getElementById('userMessage').value,
+                    termsAccepted: document.getElementById('termsAccepted').checked,
+                    timestamp: serverTimestamp(),
+                    userId: currentUser.uid
+                });
+                leadForm.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+            } catch (error) {
+                console.error(error);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Error - Try Again";
+            }
+        });
+
+        // Simple Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(s => {
+            s.classList.add('transition-all', 'duration-1000', 'translate-y-10', 'opacity-0');
+            observer.observe(s);
+        });
+    </script>
+</body>
+</html>
