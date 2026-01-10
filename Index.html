@@ -235,7 +235,60 @@
             </div>
         </div>
     </section>
+<section id="process" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Journey</h2>
+                <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue tracking-tighter">How We Execute</h3>
+            </div>
 
+            <div class="relative px-4">
+                <div class="hidden md:block absolute top-[24px] left-0 w-full h-[2px] bg-slate-100">
+                    <div id="progress-line" class="h-full bg-brand-orange transition-all duration-700 ease-out" style="width: 0%;"></div>
+                </div>
+
+                <div class="grid md:grid-cols-4 gap-12 relative">
+                    <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(25)">
+                        <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">1</div>
+                        <div class="transition-all duration-300 group-hover:-translate-y-2">
+                            <h4 class="text-brand-blue font-bold text-lg mb-2">Registration</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">Register your contact & idea to our site.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(50)">
+                        <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">2</div>
+                        <div class="transition-all duration-300 group-hover:-translate-y-2">
+                            <h4 class="text-brand-blue font-bold text-lg mb-2">Analysis</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">We Analyse your Idea thoroughly.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(75)">
+                        <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">3</div>
+                        <div class="transition-all duration-300 group-hover:-translate-y-2">
+                            <h4 class="text-brand-blue font-bold text-lg mb-2">Execution</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">We work on your Idea and build the foundation.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(100)">
+                        <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">4</div>
+                        <div class="transition-all duration-300 group-hover:-translate-y-2">
+                            <h4 class="text-brand-blue font-bold text-lg mb-2">Handover</h4>
+                            <p class="text-slate-500 text-sm leading-relaxed">We deliver it as a Running business on your hand.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function updateLine(percentage) {
+            document.getElementById('progress-line').style.width = percentage + '%';
+        }
+    </script>
     <!-- CONTACT FORM -->
     <section id="contact" class="py-24 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -396,6 +449,7 @@
     </script>
 </body>
 </html>
+
 
 
 
