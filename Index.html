@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="google-site-verification: google84e06700a3f18108.html">
     <title>C-Entrepreneurs | Execution Over Theory</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
@@ -19,146 +20,153 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            blue: '#1B365D', 
-                            orange: '#F15A24', 
-                            slate: '#F8FAFC'
-                        }
+                        brand: { blue: '#1B365D', orange: '#F15A24', slate: '#F8FAFC' }
                     },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
                 }
             }
         }
     </script>
+
     <style>
         html { scroll-behavior: smooth; }
+
+        /* ── Shared ── */
         .hero-gradient {
-            background: radial-gradient(circle at top right, rgba(241, 90, 36, 0.1), transparent), 
+            background: radial-gradient(circle at top right, rgba(241,90,36,0.1), transparent),
                         linear-gradient(135deg, #0f172a 0%, #1B365D 100%);
         }
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        .hero-gradient-dark {
+            background: radial-gradient(circle at top right, rgba(241,90,36,0.12), transparent),
+                        linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
-        .nav-link::after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 2px;
-            background: #F15A24;
-            transition: width .3s;
-        }
-        .nav-link:hover::after { width: 100%; }
-        .logo-box {
-            background: #F15A24;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-weight: 800;
-            color: white;
-        }
-        .terms-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .terms-scroll::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 10px;
-        }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgb(0 0 0/.1),0 8px 10px -6px rgb(0 0 0/.1); }
+        .nav-link::after { content:''; display:block; width:0; height:2px; background:#F15A24; transition:width .3s; }
+        .nav-link:hover::after { width:100%; }
+        .logo-box { background:#F15A24; display:flex; align-items:center; justify-content:center; border-radius:8px; font-weight:800; color:white; }
+        .terms-scroll::-webkit-scrollbar { width:6px; }
+        .terms-scroll::-webkit-scrollbar-thumb { background-color:#cbd5e1; border-radius:10px; }
+
+        /* ── Page transitions ── */
+        .page { display:none; }
+        .page.active { display:block; }
+        .page-enter { animation: pageIn 0.35s ease forwards; }
+        @keyframes pageIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── Waveform ── */
+        .wave-bar { display:inline-block; width:4px; border-radius:4px; background:#F15A24; animation:wave 1.2s ease-in-out infinite; }
+        @keyframes wave { 0%,100%{transform:scaleY(0.4);opacity:0.5} 50%{transform:scaleY(1);opacity:1} }
+        .wave-bar:nth-child(1){animation-delay:0s;height:32px}
+        .wave-bar:nth-child(2){animation-delay:.1s;height:48px}
+        .wave-bar:nth-child(3){animation-delay:.2s;height:24px}
+        .wave-bar:nth-child(4){animation-delay:.3s;height:56px}
+        .wave-bar:nth-child(5){animation-delay:.4s;height:36px}
+        .wave-bar:nth-child(6){animation-delay:.5s;height:52px}
+        .wave-bar:nth-child(7){animation-delay:.6s;height:28px}
+        .wave-bar:nth-child(8){animation-delay:.7s;height:44px}
+        .wave-bar:nth-child(9){animation-delay:.8s;height:20px}
+        .wave-bar:nth-child(10){animation-delay:.9s;height:40px}
+
+        /* ── Fade on scroll ── */
+        .fade-in { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+        .fade-in.visible { opacity:1; transform:translateY(0); }
+
+        /* ── Dev badge ── */
+        .dev-pulse { animation:devpulse 2s ease-in-out infinite; }
+        @keyframes devpulse { 0%,100%{box-shadow:0 0 0 0 rgba(241,90,36,.4)} 50%{box-shadow:0 0 0 12px rgba(241,90,36,0)} }
+
+        /* ── Progress bars ── */
+        .progress-fill { background:linear-gradient(90deg,#F15A24,#ff8c5a); border-radius:999px; animation:progressgrow 2s ease-out forwards; animation-play-state:paused; width:0%; }
+        @keyframes progressgrow { to { width:var(--target-width); } }
+
+        /* ── Cursor blink ── */
+        .cursor::after { content:'|'; animation:blink .8s step-end infinite; color:#F15A24; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ── Orbit ── */
+        .orbit { animation:orbit 8s linear infinite; transform-origin:center; }
+        @keyframes orbit { from{transform:rotate(0deg) translateX(60px) rotate(0deg)} to{transform:rotate(360deg) translateX(60px) rotate(-360deg)} }
+        .orbit-2 { animation-delay:-4s; }
+
+        /* ── Float cards ── */
+        .float-card { animation:floatup 4s ease-in-out infinite; }
+        .float-card:nth-child(2){animation-delay:1.5s}
+        @keyframes floatup { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+        /* ── Process step ── */
+        #progress-line { height:100%; background:#F15A24; transition:width .7s ease-out; width:0%; }
     </style>
 </head>
 <body class="bg-brand-slate text-slate-900 antialiased">
 
-    <!-- TERMS MODAL -->
-    <div id="termsModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-brand-slate">
-                <h2 class="text-2xl font-black text-brand-blue tracking-tight">Terms & Conditions</h2>
-                <button onclick="toggleTerms()" class="text-slate-400 hover:text-brand-orange transition">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="p-8 overflow-y-auto terms-scroll text-slate-600 leading-relaxed text-sm space-y-6">
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">1. Confidentiality & Intellectual Property Protection</h3>
-                    <p>C-Entrepreneurs strictly respects and protects client confidentiality. Any business ideas, concepts, strategies, documents, or information shared by the client will not be disclosed, copied, reused, or shared with third parties without the client’s written consent. All client ideas and proprietary information remain the exclusive intellectual property of the client, unless otherwise defined in a mutually signed agreement.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">2. Non-Disclosure Assurance</h3>
-                    <p>C-Entrepreneurs commits to maintaining full confidentiality throughout and after the engagement. Internal access to client information is limited strictly to execution requirements. Any breach of confidentiality will be treated as a serious violation.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">3. Scope of Services</h3>
-                    <p>All services provided by C-Entrepreneurs are customized based on the client’s needs. The exact scope of services, responsibilities, timelines, and deliverables will be clearly defined in a formal contract or service agreement before commencement of work.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">4. Payments & Commercial Terms</h3>
-                    <p>All payment terms, pricing models, milestones, refunds (if any), and financial obligations will be clearly outlined in written agreements. No services shall be rendered without mutual agreement on commercial terms.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">5. Contract-Based Engagement</h3>
-                    <p>C-Entrepreneurs operates strictly on an agreement-based engagement model. All operational authority, execution responsibilities, management involvement, and decision-making rights are governed by the signed contract between both parties.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">6. Execution Responsibility & Limitations</h3>
-                    <p>While C-Entrepreneurs provides execution, management support, and strategic guidance, business outcomes may depend on multiple external and internal factors. Liability is limited to the scope defined within the agreement.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">7. Termination</h3>
-                    <p>Either party may terminate the engagement as per the termination clause defined in the contract. Confidentiality obligations remain valid even after termination.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">8. Amendments</h3>
-                    <p>Any changes to services, scope, or commercial terms must be documented and approved by both parties in writing.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">9. Governing Law</h3>
-                    <p>All agreements and engagements are governed by applicable local laws as specified in the contract.</p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-brand-blue mb-2">10. Acceptance</h3>
-                    <p>By engaging with C-Entrepreneurs or submitting information through this website, the client acknowledges and agrees to these terms and conditions.</p>
-                </section>
-            </div>
-            <div class="p-8 bg-brand-slate text-center">
-                <button onclick="toggleTerms()" class="bg-brand-blue text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition">Close</button>
-            </div>
+<!-- ════════════════════════════════════════════
+     TERMS MODAL (shared)
+════════════════════════════════════════════ -->
+<div id="termsModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-brand-slate">
+            <h2 class="text-2xl font-black text-brand-blue tracking-tight">Terms & Conditions</h2>
+            <button onclick="toggleTerms()" class="text-slate-400 hover:text-brand-orange transition">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-8 overflow-y-auto terms-scroll text-slate-600 leading-relaxed text-sm space-y-6">
+            <section><h3 class="font-bold text-brand-blue mb-2">1. Confidentiality & Intellectual Property Protection</h3><p>C-Entrepreneurs strictly respects and protects client confidentiality. Any business ideas, concepts, strategies, documents, or information shared by the client will not be disclosed, copied, reused, or shared with third parties without the client's written consent. All client ideas and proprietary information remain the exclusive intellectual property of the client, unless otherwise defined in a mutually signed agreement.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">2. Non-Disclosure Assurance</h3><p>C-Entrepreneurs commits to maintaining full confidentiality throughout and after the engagement. Internal access to client information is limited strictly to execution requirements. Any breach of confidentiality will be treated as a serious violation.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">3. Scope of Services</h3><p>All services provided by C-Entrepreneurs are customized based on the client's needs. The exact scope, responsibilities, timelines, and deliverables will be clearly defined in a formal contract before commencement of work.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">4. Payments & Commercial Terms</h3><p>All payment terms, pricing models, milestones, refunds (if any), and financial obligations will be clearly outlined in written agreements. No services shall be rendered without mutual agreement on commercial terms.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">5. Contract-Based Engagement</h3><p>C-Entrepreneurs operates strictly on an agreement-based engagement model. All operational authority, execution responsibilities, management involvement, and decision-making rights are governed by the signed contract between both parties.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">6. Execution Responsibility & Limitations</h3><p>While C-Entrepreneurs provides execution, management support, and strategic guidance, business outcomes may depend on multiple external and internal factors. Liability is limited to the scope defined within the agreement.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">7. Termination</h3><p>Either party may terminate the engagement as per the termination clause defined in the contract. Confidentiality obligations remain valid even after termination.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">8. Amendments</h3><p>Any changes to services, scope, or commercial terms must be documented and approved by both parties in writing.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">9. Governing Law</h3><p>All agreements and engagements are governed by applicable local laws as specified in the contract.</p></section>
+            <section><h3 class="font-bold text-brand-blue mb-2">10. Acceptance</h3><p>By engaging with C-Entrepreneurs or submitting information through this website, the client acknowledges and agrees to these terms and conditions.</p></section>
+        </div>
+        <div class="p-8 bg-brand-slate text-center">
+            <button onclick="toggleTerms()" class="bg-brand-blue text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition">Close</button>
         </div>
     </div>
+</div>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center gap-3">
-                    <div class="logo-box w-10 h-10 text-xl">C</div>
-                    <div class="flex flex-col leading-none">
-                        <span class="text-xl font-extrabold tracking-tighter text-brand-blue uppercase">C-Entrepreneurs</span>
-                        <span class="text-[10px] font-bold text-brand-orange tracking-[0.2em] uppercase mt-0.5">Entrepreneurs Service Provider</span>
-                    </div>
+<!-- ════════════════════════════════════════════
+     NAVIGATION (shared)
+════════════════════════════════════════════ -->
+<nav class="fixed w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+            <button onclick="goTo('home')" class="flex items-center gap-3">
+                <div class="logo-box w-10 h-10 text-xl">C</div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-xl font-extrabold tracking-tighter text-brand-blue uppercase">C-Entrepreneurs</span>
+                    <span class="text-[10px] font-bold text-brand-orange tracking-[0.2em] uppercase mt-0.5">Entrepreneurs Service Provider</span>
                 </div>
-
-                <div class="hidden lg:flex items-center space-x-10 text-sm font-bold text-brand-blue uppercase tracking-wider">
-                    <a href="#about" class="nav-link">The Concept</a>
-                    <a href="#services" class="nav-link">Execution</a>
-                    <a href="#contact" class="bg-brand-orange text-white px-7 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">Partner With Us</a>
-                </div>
-
-                <button class="lg:hidden text-brand-blue" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
+            </button>
+            <div class="hidden lg:flex items-center space-x-10 text-sm font-bold text-brand-blue uppercase tracking-wider">
+                <button onclick="goTo('home','about')" class="nav-link">The Concept</button>
+                <button onclick="goTo('home','services')" class="nav-link">Execution</button>
+                <button onclick="goTo('home','portfolio')" class="nav-link">Portfolio</button>
+                <button onclick="goTo('home','contact')" class="bg-brand-orange text-white px-7 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">Partner With Us</button>
             </div>
+            <button class="lg:hidden text-brand-blue" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
         </div>
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-6 space-y-4 text-center">
-            <a href="#about" class="block text-lg font-bold text-brand-blue">Concept</a>
-            <a href="#services" class="block text-lg font-bold text-brand-blue">Execution</a>
-            <a href="#contact" class="block bg-brand-orange text-white py-4 rounded-xl font-bold mx-4">Partner With Us</a>
-        </div>
-    </nav>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-6 space-y-4 text-center">
+        <button onclick="goTo('home','about');closeMobile()" class="block w-full text-lg font-bold text-brand-blue">Concept</button>
+        <button onclick="goTo('home','services');closeMobile()" class="block w-full text-lg font-bold text-brand-blue">Execution</button>
+        <button onclick="goTo('home','portfolio');closeMobile()" class="block w-full text-lg font-bold text-brand-blue">Portfolio</button>
+        <button onclick="goTo('home','contact');closeMobile()" class="block bg-brand-orange text-white py-4 rounded-xl font-bold mx-4">Partner With Us</button>
+    </div>
+</nav>
 
-    <!-- HERO SECTION -->
+
+<!-- ════════════════════════════════════════════
+     PAGE: HOME
+════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+    <!-- HERO -->
     <header class="relative min-h-screen flex items-center pt-20 hero-gradient text-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center lg:text-left">
             <div class="max-w-4xl">
@@ -167,15 +175,13 @@
                     <span class="text-xs font-bold uppercase tracking-widest text-orange-200">Entrepreneurs Service Provider (ESP)</span>
                 </div>
                 <h1 class="text-5xl md:text-8xl font-extrabold leading-[0.9] mb-8 tracking-tighter">
-                    We Build. <br>
-                    We Revive. <br>
-                    <span class="text-brand-orange">We Execute.</span>
+                    We Build. <br>We Revive. <br><span class="text-brand-orange">We Execute.</span>
                 </h1>
                 <p class="text-lg md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-2xl font-light">
                     Turning ideas into real, functioning companies. We handle the <strong>hands-on execution</strong>, management, and operations.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                    <a href="#contact" class="px-10 py-5 bg-brand-orange rounded-2xl font-extrabold text-center hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 text-lg uppercase">Launch Your Venture</a>
+                    <button onclick="goTo('home','contact')" class="px-10 py-5 bg-brand-orange rounded-2xl font-extrabold text-center hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 text-lg uppercase">Launch Your Venture</button>
                 </div>
             </div>
         </div>
@@ -187,24 +193,16 @@
             <div class="grid lg:grid-cols-2 gap-20 items-center">
                 <div>
                     <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Concept</h2>
-                    <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue leading-tight mb-8 tracking-tight">
-                        From raw ideas to <span class="text-brand-orange">functioning reality.</span>
-                    </h3>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue leading-tight mb-8 tracking-tight">From raw ideas to <span class="text-brand-orange">functioning reality.</span></h3>
                     <div class="space-y-6 text-slate-600 text-lg leading-relaxed">
-                        <p>
-                            C-Entrepreneurs is an <strong>Entrepreneurship Service Provider (ESP)</strong> that helps individuals and struggling businesses turn ideas into real companies. Instead of offering only advice, we take <strong>hands-on responsibility</strong> for execution, management, and operations.
-                        </p>
-                        <p>
-                            We support non-management founders, launch new ventures, and revive declining businesses through structured execution, strategic decision-making, and operational setup. Our engagement is customized, agreement-based, and focused on real results — <strong>execution over theory.</strong>
-                        </p>
+                        <p>C-Entrepreneurs is an <strong>Entrepreneurship Service Provider (ESP)</strong> that helps individuals and struggling businesses turn ideas into real companies. Instead of offering only advice, we take <strong>hands-on responsibility</strong> for execution, management, and operations.</p>
+                        <p>We support non-management founders, launch new ventures, and revive declining businesses through structured execution, strategic decision-making, and operational setup. Our engagement is customized, agreement-based, and focused on real results — <strong>execution over theory.</strong></p>
                     </div>
                 </div>
                 <div class="bg-brand-blue p-12 rounded-[3rem] shadow-2xl relative text-white">
                     <div class="absolute -top-6 -right-6 w-24 h-24 bg-brand-orange rounded-full flex items-center justify-center text-white font-black text-xs text-center p-2 uppercase tracking-tighter">Agreement Based</div>
                     <h4 class="text-2xl font-bold mb-6 text-orange-400 uppercase tracking-tighter">Confidentiality Assured</h4>
-                    <p class="text-xl font-light leading-relaxed mb-8 italic">
-                        "Any business ideas, concepts, or strategies shared remain the exclusive intellectual property of the client. We protect your vision as if it were our own."
-                    </p>
+                    <p class="text-xl font-light leading-relaxed mb-8 italic">"Any business ideas, concepts, or strategies shared remain the exclusive intellectual property of the client. We protect your vision as if it were our own."</p>
                     <button onclick="toggleTerms()" class="text-brand-orange font-bold uppercase tracking-[0.2em] text-[10px] hover:underline">View Full Terms & Conditions</button>
                 </div>
             </div>
@@ -218,7 +216,6 @@
                 <h2 class="text-4xl md:text-6xl font-black text-brand-blue tracking-tighter">Execution Framework</h2>
                 <div class="w-24 h-2 bg-brand-orange mx-auto mt-6 rounded-full"></div>
             </div>
-
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-10 rounded-3xl border border-slate-100 service-card transition-all duration-300">
                     <h3 class="text-2xl font-bold text-brand-blue mb-4">Strategic Setup</h3>
@@ -235,18 +232,18 @@
             </div>
         </div>
     </section>
-<section id="process" class="py-24 bg-white overflow-hidden">
+
+    <!-- PROCESS -->
+    <section id="process" class="py-24 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20">
                 <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Journey</h2>
                 <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue tracking-tighter">How We Execute</h3>
             </div>
-
             <div class="relative px-4">
                 <div class="hidden md:block absolute top-[24px] left-0 w-full h-[2px] bg-slate-100">
-                    <div id="progress-line" class="h-full bg-brand-orange transition-all duration-700 ease-out" style="width: 0%;"></div>
+                    <div id="progress-line"></div>
                 </div>
-
                 <div class="grid md:grid-cols-4 gap-12 relative">
                     <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(25)">
                         <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">1</div>
@@ -255,28 +252,25 @@
                             <p class="text-slate-500 text-sm leading-relaxed">Register your contact & idea to our site.</p>
                         </div>
                     </div>
-
                     <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(50)">
                         <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">2</div>
                         <div class="transition-all duration-300 group-hover:-translate-y-2">
                             <h4 class="text-brand-blue font-bold text-lg mb-2">Analysis</h4>
-                            <p class="text-slate-500 text-sm leading-relaxed">We Analyse your Idea thoroughly.</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">We analyse your idea thoroughly.</p>
                         </div>
                     </div>
-
                     <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(75)">
                         <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">3</div>
                         <div class="transition-all duration-300 group-hover:-translate-y-2">
                             <h4 class="text-brand-blue font-bold text-lg mb-2">Execution</h4>
-                            <p class="text-slate-500 text-sm leading-relaxed">We work on your Idea and build the foundation.</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">We work on your idea and build the foundation.</p>
                         </div>
                     </div>
-
                     <div class="process-step flex flex-col items-center text-center cursor-pointer group" onmouseover="updateLine(100)">
                         <div class="w-12 h-12 bg-white border-4 border-slate-100 rounded-full flex items-center justify-center text-slate-400 font-black text-xl z-10 mb-6 transition-all duration-500 group-hover:border-brand-orange group-hover:bg-brand-orange group-hover:text-white group-hover:shadow-[0_0_20px_rgba(241,90,36,0.5)] group-hover:scale-125">4</div>
                         <div class="transition-all duration-300 group-hover:-translate-y-2">
                             <h4 class="text-brand-blue font-bold text-lg mb-2">Handover</h4>
-                            <p class="text-slate-500 text-sm leading-relaxed">We deliver it as a Running business on your hand.</p>
+                            <p class="text-slate-500 text-sm leading-relaxed">We deliver it as a running business in your hands.</p>
                         </div>
                     </div>
                 </div>
@@ -284,26 +278,100 @@
         </div>
     </section>
 
-    <script>
-        function updateLine(percentage) {
-            document.getElementById('progress-line').style.width = percentage + '%';
-        }
-    </script>
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">Built In-House</h2>
+                <h3 class="text-4xl md:text-6xl font-black text-brand-blue tracking-tighter">Our Applications</h3>
+                <div class="w-24 h-2 bg-brand-orange mx-auto mt-6 rounded-full"></div>
+                <p class="mt-6 text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">Real tools we have built — proof that execution is not just a service we offer, it is how we operate.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-10">
+
+                <!-- Card 1: VoxBridge -->
+                <div class="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col">
+                    <div class="relative bg-brand-blue p-10 overflow-hidden">
+                        <div class="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-brand-orange/10 border border-brand-orange/20"></div>
+                        <div class="absolute -bottom-4 -left-4 w-24 h-24 rounded-full bg-white/5"></div>
+                        <div class="relative z-10 mb-6 inline-flex items-center justify-center w-16 h-16 bg-brand-orange/20 border border-brand-orange/30 rounded-2xl">
+                            <svg class="w-8 h-8 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-orange/20 border border-brand-orange/30 rounded-full mb-4">
+                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-green-300">Live · AI · Language Tech</span>
+                            </div>
+                            <h4 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">VoxBridge<br><span class="text-brand-orange">Tamil Audio Transcriber</span></h4>
+                        </div>
+                    </div>
+                    <div class="p-10 flex flex-col flex-1">
+                        <p class="text-slate-600 leading-relaxed text-base mb-8">An AI-powered tool built on Groq Whisper + LLaMA that converts Tamil audio into a <strong>Tamil transcript</strong>, <strong>English translation</strong>, and a smart <strong>English summary</strong> — simultaneously. 100% free, no data stored.</p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Speech-to-Text</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Tamil NLP</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Auto Translation</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Groq AI</span>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">C-Entrepreneurs Build</span>
+                            <button onclick="goTo('voxbridge')" class="inline-flex items-center gap-2 text-brand-orange font-bold text-sm group-hover:gap-3 transition-all duration-300">
+                                View Project <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Dighos -->
+                <div class="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col">
+                    <div class="relative p-10 overflow-hidden" style="background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)">
+                        <div class="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-brand-orange/10 border border-brand-orange/20"></div>
+                        <div class="absolute -bottom-4 -left-4 w-24 h-24 rounded-full bg-white/5"></div>
+                        <div class="relative z-10 mb-6 inline-flex items-center justify-center w-16 h-16 bg-brand-orange/20 border border-brand-orange/30 rounded-2xl">
+                            <svg class="w-8 h-8 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-orange/20 border border-brand-orange/30 rounded-full mb-4">
+                                <span class="w-1.5 h-1.5 bg-brand-orange rounded-full animate-pulse"></span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-orange-300">In Development · Platform · SaaS</span>
+                            </div>
+                            <h4 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">Dighos</h4>
+                            <p class="text-slate-400 text-sm mt-2 font-medium">Execution-grade digital platform</p>
+                        </div>
+                    </div>
+                    <div class="p-10 flex flex-col flex-1">
+                        <p class="text-slate-600 leading-relaxed text-base mb-8"><strong>Dighos</strong> is a platform built and operated by C-Entrepreneurs — engineered from the ground up as a complete digital product. Every layer, from architecture to interface, reflects the same hands-on execution philosophy we bring to client ventures.</p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Full-Stack</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Product Design</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">Scalable</span>
+                            <span class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">In-House</span>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">C-Entrepreneurs Build</span>
+                            <button onclick="goTo('dighos')" class="inline-flex items-center gap-2 text-brand-orange font-bold text-sm group-hover:gap-3 transition-all duration-300">
+                                View Project <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- CONTACT FORM -->
     <section id="contact" class="py-24 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-brand-slate rounded-[3rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-slate-200">
                 <div class="lg:w-1/3 bg-brand-orange p-12 text-white flex flex-col justify-center text-center">
                     <h2 class="text-3xl font-black mb-6">Partner With Us</h2>
-                    <p class="text-orange-100 text-sm font-medium mb-8 leading-relaxed">
-                        C-Entrepreneurs operates strictly on an agreement-based model. Share your vision to begin.
-                    </p>
+                    <p class="text-orange-100 text-sm font-medium mb-8 leading-relaxed">C-Entrepreneurs operates strictly on an agreement-based model. Share your vision to begin.</p>
                     <div class="pt-6 border-t border-white/20">
                         <p class="text-[10px] uppercase tracking-[0.2em] font-bold opacity-70">Corporate Unit</p>
                         <p class="font-bold">C-Entrepreneurs ESP</p>
                     </div>
                 </div>
-
                 <div class="lg:w-2/3 p-12 bg-white">
                     <form id="leadForm">
                         <div class="grid md:grid-cols-2 gap-6 mb-8">
@@ -320,18 +388,13 @@
                             <label class="text-[10px] uppercase tracking-widest font-black text-slate-400 block mb-2">Project Details</label>
                             <textarea id="userMessage" rows="4" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none transition font-medium" placeholder="Describe your idea or business challenge..."></textarea>
                         </div>
-                        
-                        <!-- Acceptance Checkbox -->
                         <div class="mb-8 flex items-start gap-3">
                             <input type="checkbox" required id="termsAccepted" class="mt-1 w-4 h-4 text-brand-orange border-slate-300 rounded focus:ring-brand-orange cursor-pointer">
                             <label for="termsAccepted" class="text-xs text-slate-500 leading-normal">
                                 I acknowledge that by submitting this information, I agree to the <button type="button" onclick="toggleTerms()" class="text-brand-orange font-bold hover:underline">Terms & Conditions</button>, including non-disclosure and IP protection.
                             </label>
                         </div>
-
-                        <button type="submit" id="submitBtn" class="w-full py-5 bg-brand-blue text-white font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition shadow-xl shadow-brand-blue/20">
-                            Request Execution Plan
-                        </button>
+                        <button type="submit" id="submitBtn" class="w-full py-5 bg-brand-blue text-white font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition shadow-xl shadow-brand-blue/20">Request Execution Plan</button>
                     </form>
                     <div id="successMessage" class="hidden text-center py-20">
                         <h3 class="text-3xl font-black text-brand-blue">Strategy Request Received</h3>
@@ -354,7 +417,7 @@
                     <div class="space-y-4 pt-6 border-t border-white/10">
                         <p class="text-[10px] uppercase tracking-widest font-bold text-brand-orange">Direct Contact</p>
                         <a href="tel:+919025360572" class="block text-2xl font-black hover:text-brand-orange transition">+91 90253 60572</a>
-                        <a href="mailto:centrepreneursb2c@gmail.com" class="block text-blue-200 hover:text-white transition font-medium italic text-sm">centrepreneursb2c@gmail.com</a>
+                        <a href="mailto:contact@c-entrepreneurs.com" class="block text-blue-200 hover:text-white transition font-medium italic text-sm">contact@c-entrepreneurs.com</a>
                     </div>
                 </div>
                 <div>
@@ -369,88 +432,529 @@
         </div>
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+</div><!-- end #page-home -->
 
-        const firebaseConfig = {
-  apiKey: "AIzaSyBZn3JWi1U0u5EtsQIbyvPYCpHTSc-Dy_Q",
-  authDomain: "c-entrepreneurs-4aaf5.firebaseapp.com",
-  projectId: "c-entrepreneurs-4aaf5",
-  storageBucket: "c-entrepreneurs-4aaf5.firebasestorage.app",
-  messagingSenderId: "479491068986",
-  appId: "1:479491068986:web:ccd193f25274f5c6565103"
-};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+<!-- ════════════════════════════════════════════
+     PAGE: VOXBRIDGE
+════════════════════════════════════════════ -->
+<div id="page-voxbridge" class="page">
 
-        let currentUser = null;
+    <!-- HERO -->
+    <header class="relative min-h-screen flex items-center pt-20 hero-gradient text-white overflow-hidden">
+        <div class="absolute top-20 right-0 w-[600px] h-[600px] rounded-full bg-brand-orange/5 border border-brand-orange/10 -translate-y-1/4 translate-x-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-white/3 -translate-x-1/2 translate-y-1/2"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-24">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <!-- Breadcrumb -->
+                    <div class="flex items-center gap-2 mb-8 text-slate-400 text-xs font-bold uppercase tracking-widest">
+                        <button onclick="goTo('home','portfolio')" class="hover:text-brand-orange transition">Portfolio</button>
+                        <span>/</span>
+                        <span class="text-brand-orange">VoxBridge</span>
+                    </div>
+                    <!-- Live badge -->
+                    <div class="inline-flex items-center gap-3 px-5 py-2.5 bg-green-500/15 border border-green-400/30 rounded-full mb-8">
+                        <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
+                        <span class="text-xs font-black uppercase tracking-widest text-green-300">Live & Free to Use</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-black leading-[1] tracking-tighter mb-4">
+                        VoxBridge
+                    </h1>
+                    <p class="text-brand-orange font-black uppercase tracking-[0.25em] text-sm mb-6">Tamil Audio → Tamil Text → English</p>
+                    <p class="text-slate-300 text-lg leading-relaxed mb-10 max-w-xl font-light">
+                        Built on <strong class="text-white">Groq Whisper + LLaMA</strong>, VoxBridge converts spoken Tamil into a Tamil transcript, English translation, and an AI-generated English summary — all at once, 100% free, no data stored.
+                    </p>
+                    <div class="flex flex-wrap gap-3 mb-10">
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">Groq Whisper STT</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">LLaMA Translation</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">Speaker Segments</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">100% Free</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://audio2tamiltext.netlify.app/" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-brand-orange rounded-2xl font-extrabold text-white hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 uppercase text-sm">
+                            Launch App
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                        <button onclick="goTo('home','portfolio')" class="inline-flex items-center gap-2 text-slate-400 hover:text-brand-orange font-bold text-sm transition-all">
+                            <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            Back to Portfolio
+                        </button>
+                    </div>
+                </div>
 
-        onAuthStateChanged(auth, (user) => { currentUser = user; });
-        async function initAuth() { try { await signInAnonymously(auth); } catch(e) {} }
-        initAuth();
+                <!-- Animated mockup -->
+                <div class="flex justify-center">
+                    <div class="w-full max-w-sm bg-white/5 border border-white/10 rounded-[2rem] p-8 backdrop-blur-md">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            <span class="ml-auto text-xs text-slate-500 font-bold uppercase tracking-wider">VoxBridge</span>
+                        </div>
+                        <div class="bg-brand-blue/50 border border-white/10 rounded-2xl p-6 mb-6 flex items-center justify-center gap-2">
+                            <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                            <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                            <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                        </div>
+                        <p class="text-center text-xs text-slate-400 font-bold uppercase tracking-widest mb-6">Listening to Tamil Audio...</p>
+                        <div class="space-y-3">
+                            <div class="bg-white/8 border border-white/10 rounded-xl p-4">
+                                <p class="text-[10px] font-black uppercase tracking-widest text-brand-orange mb-1">Tamil Transcript</p>
+                                <p class="text-white text-sm font-medium leading-relaxed cursor">நான் ஒரு தொழிலதிபர்</p>
+                            </div>
+                            <div class="bg-white/8 border border-white/10 rounded-xl p-4">
+                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-300 mb-1">English Translation</p>
+                                <p class="text-slate-200 text-sm">I am an entrepreneur</p>
+                            </div>
+                            <div class="bg-white/8 border border-white/10 rounded-xl p-4">
+                                <p class="text-[10px] font-black uppercase tracking-widest text-green-300 mb-1">English Summary</p>
+                                <p class="text-slate-300 text-xs">Speaker identifies as an entrepreneur...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        // Terms Toggle
-        window.toggleTerms = function() {
-            const modal = document.getElementById('termsModal');
-            modal.classList.toggle('hidden');
-            document.body.classList.toggle('overflow-hidden');
+    <!-- HOW IT WORKS -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 fade-in">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Pipeline</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-brand-blue tracking-tighter">How VoxBridge Works</h3>
+            </div>
+            <div class="grid md:grid-cols-4 gap-6 relative fade-in">
+                <div class="hidden md:block absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-slate-200 z-0"></div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-brand-blue rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-blue/20">
+                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-base mb-2">Enter Groq Key</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Free API key from console.groq.com — no credit card needed</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-brand-blue rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-blue/20">
+                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-base mb-2">Upload or Record</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Drop an MP3/WAV/M4A file or record live — up to 2 hours</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-brand-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-orange/20">
+                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-base mb-2">Groq Whisper STT</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Whisper model transcribes Tamil speech into Tamil text with speaker segments</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="w-20 h-20 bg-brand-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-orange/20">
+                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-base mb-2">LLaMA Translates</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">LLaMA generates the English translation + concise summary in one pass</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 fade-in">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">What It Does</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-brand-blue tracking-tighter">Features</h3>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 fade-in">
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Tamil Transcript</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Full Tamil text output with proper formatting. Copy with one click.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">English Translation</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Accurate English translation generated alongside the Tamil transcript simultaneously.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">AI English Summary</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">LLaMA condenses the full content into a sharp English summary with key points.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Speaker Segments</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Automatically identifies different speakers in the audio and labels each segment clearly.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Privacy First</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">No data stored. Your API key lives only in browser memory and is never sent to our servers.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    </div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Multiple Formats</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Supports MP3, WAV, M4A, MP4, OGG — upload files up to 2 hours long.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 hero-gradient text-white">
+        <div class="max-w-3xl mx-auto px-4 text-center fade-in">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/20 mb-8">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="text-xs font-bold uppercase tracking-widest text-green-200">Live Now — 100% Free</span>
+            </div>
+            <h3 class="text-4xl md:text-5xl font-black tracking-tighter mb-6">Try VoxBridge Today</h3>
+            <p class="text-slate-300 text-lg mb-10 leading-relaxed">No account. No credit card. Just your free Groq API key and your Tamil audio.</p>
+            <a href="https://audio2tamiltext.netlify.app/" target="_blank" class="inline-flex items-center gap-3 px-10 py-5 bg-brand-orange rounded-2xl font-extrabold text-white hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 text-lg uppercase">
+                Open VoxBridge
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-blue text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <button onclick="goTo('home')" class="flex items-center gap-3">
+                <div class="logo-box w-8 h-8 text-sm">C</div>
+                <span class="text-lg font-extrabold tracking-tighter uppercase">C-Entrepreneurs</span>
+            </button>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-300/50">&copy; 2024 C-Entrepreneurs ESP. All rights reserved.</p>
+            <button onclick="goTo('home','portfolio')" class="text-sm font-bold text-blue-200 hover:text-brand-orange transition">&larr; Back to Portfolio</button>
+        </div>
+    </footer>
+
+</div><!-- end #page-voxbridge -->
+
+
+<!-- ════════════════════════════════════════════
+     PAGE: DIGHOS
+════════════════════════════════════════════ -->
+<div id="page-dighos" class="page">
+
+    <!-- HERO -->
+    <header class="relative min-h-screen flex items-center pt-20 hero-gradient-dark text-white overflow-hidden">
+        <div class="absolute top-20 right-0 w-[700px] h-[700px] rounded-full bg-brand-orange/5 border border-brand-orange/10 -translate-y-1/4 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-white/3 -translate-x-1/2 translate-y-1/2"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-24">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="flex items-center gap-2 mb-8 text-slate-400 text-xs font-bold uppercase tracking-widest">
+                        <button onclick="goTo('home','portfolio')" class="hover:text-brand-orange transition">Portfolio</button>
+                        <span>/</span>
+                        <span class="text-brand-orange">Dighos</span>
+                    </div>
+                    <div class="inline-flex items-center gap-3 px-5 py-2.5 bg-brand-orange/15 border border-brand-orange/30 rounded-full mb-8 dev-pulse">
+                        <span class="w-2.5 h-2.5 bg-brand-orange rounded-full animate-pulse"></span>
+                        <span class="text-xs font-black uppercase tracking-widest text-orange-300">Currently In Development</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black leading-[1] tracking-tighter mb-4">Dighos</h1>
+                    <p class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-6">Execution-Grade Digital Platform</p>
+                    <p class="text-slate-300 text-lg leading-relaxed mb-10 max-w-xl font-light">
+                        A full-scale digital platform engineered from the ground up by C-Entrepreneurs. Every layer — architecture to interface — embodies the hands-on execution philosophy we bring to every engagement.
+                    </p>
+                    <div class="flex flex-wrap gap-3 mb-10">
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">Full-Stack</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">Product Design</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">Scalable</span>
+                        <span class="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-full text-xs font-bold uppercase tracking-wider">In-House</span>
+                    </div>
+                    <button onclick="goTo('home','portfolio')" class="inline-flex items-center gap-2 text-slate-400 hover:text-brand-orange font-bold text-sm transition-all">
+                        <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        Back to Portfolio
+                    </button>
+                </div>
+                <!-- Orbit visual -->
+                <div class="flex justify-center items-center">
+                    <div class="relative w-64 h-64">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-28 h-28 bg-brand-orange rounded-3xl flex items-center justify-center shadow-2xl shadow-brand-orange/40">
+                                <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 rounded-full border border-white/10 scale-125"></div>
+                        <div class="absolute inset-0 rounded-full border border-white/5 scale-150"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="orbit w-4 h-4 bg-brand-orange rounded-full shadow-lg shadow-brand-orange/50"></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="orbit orbit-2 w-3 h-3 bg-white rounded-full opacity-60"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- DEVELOPMENT PROGRESS -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">Build Progress</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-brand-blue tracking-tighter">Where We Are Now</h3>
+                <div class="w-24 h-2 bg-brand-orange mx-auto mt-6 rounded-full"></div>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-8 fade-in">
+                <div class="progress-item">
+                    <div class="flex justify-between items-center mb-3"><span class="font-black text-brand-blue text-sm uppercase tracking-wider">Product Architecture</span><span class="text-brand-orange font-black text-sm">75%</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="progress-fill h-3" style="--target-width:75%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="flex justify-between items-center mb-3"><span class="font-black text-brand-blue text-sm uppercase tracking-wider">Backend Development</span><span class="text-brand-orange font-black text-sm">60%</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="progress-fill h-3" style="--target-width:60%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="flex justify-between items-center mb-3"><span class="font-black text-brand-blue text-sm uppercase tracking-wider">Frontend & UI Design</span><span class="text-brand-orange font-black text-sm">50%</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="progress-fill h-3" style="--target-width:50%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="flex justify-between items-center mb-3"><span class="font-black text-brand-blue text-sm uppercase tracking-wider">Testing & QA</span><span class="text-brand-orange font-black text-sm">25%</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="progress-fill h-3" style="--target-width:25%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="flex justify-between items-center mb-3"><span class="font-black text-brand-blue text-sm uppercase tracking-wider">Launch Preparation</span><span class="text-brand-orange font-black text-sm">10%</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="progress-fill h-3" style="--target-width:10%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE VISION -->
+    <section class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-20 items-center fade-in">
+                <div>
+                    <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">The Vision</h2>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-brand-blue leading-tight mb-8 tracking-tight">Built from scratch.<br><span class="text-brand-orange">Executed in-house.</span></h3>
+                    <div class="space-y-6 text-slate-600 text-lg leading-relaxed">
+                        <p>Dighos is more than a product — it is a <strong>proof of concept</strong> for everything C-Entrepreneurs stands for. We are not just advisors who guide others to build; we build ourselves.</p>
+                        <p>Every technical decision, every design choice, and every business strategy behind Dighos has been owned and executed entirely by the C-Entrepreneurs team — with <strong>zero outsourcing of accountability.</strong></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-brand-blue p-8 rounded-3xl text-white float-card"><div class="text-4xl font-black text-brand-orange mb-2">100%</div><p class="text-sm font-bold text-blue-200 uppercase tracking-wider">In-House Build</p></div>
+                    <div class="bg-white border border-slate-200 p-8 rounded-3xl float-card"><div class="text-4xl font-black text-brand-blue mb-2">0</div><p class="text-sm font-bold text-slate-400 uppercase tracking-wider">Outsourced Decisions</p></div>
+                    <div class="bg-white border border-slate-200 p-8 rounded-3xl float-card"><div class="text-4xl font-black text-brand-blue mb-2">Full</div><p class="text-sm font-bold text-slate-400 uppercase tracking-wider">Stack Ownership</p></div>
+                    <div class="bg-brand-orange p-8 rounded-3xl text-white float-card"><div class="text-4xl font-black mb-2">Live</div><p class="text-sm font-bold text-orange-100 uppercase tracking-wider">Execution Mode</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANNED FEATURES -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 fade-in">
+                <h2 class="text-brand-orange font-black uppercase tracking-[0.3em] text-sm mb-4">Roadmap</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-brand-blue tracking-tighter">Planned Features</h3>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 fade-in">
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm12 0a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Intuitive Dashboard</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">A clean, data-rich command centre giving users full visibility over all platform activity in one place.</p>
+                </div>
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Secure Auth System</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Role-based access control with enterprise-grade authentication protecting every layer.</p>
+                </div>
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Analytics Engine</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Built-in tracking that surfaces actionable insights without third-party dependencies.</p>
+                </div>
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Mobile-First Design</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Every screen designed mobile-first — full functionality on any device, anywhere.</p>
+                </div>
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">API-Ready</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Open integration layer allowing Dighos to plug into any existing business tool seamlessly.</p>
+                </div>
+                <div class="bg-brand-slate border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center mb-6"><svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div>
+                    <h4 class="font-black text-brand-blue text-lg mb-3">Cloud Infrastructure</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Scalable cloud architecture built to grow from day one without re-engineering the foundation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 hero-gradient-dark text-white">
+        <div class="max-w-3xl mx-auto px-4 text-center fade-in">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/20 mb-8">
+                <span class="w-2 h-2 bg-brand-orange rounded-full animate-pulse"></span>
+                <span class="text-xs font-bold uppercase tracking-widest text-orange-200">Launching Soon</span>
+            </div>
+            <h3 class="text-4xl md:text-5xl font-black tracking-tighter mb-6">Be First to Know</h3>
+            <p class="text-slate-300 text-lg mb-10 leading-relaxed">Dighos is being built with precision by the C-Entrepreneurs team. Reach out to learn more or get early access when it launches.</p>
+            <button onclick="goTo('home','contact')" class="inline-flex items-center gap-3 px-10 py-5 bg-brand-orange rounded-2xl font-extrabold text-white hover:bg-orange-600 transition shadow-2xl shadow-orange-600/40 text-lg uppercase">
+                Get Early Access
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-blue text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <button onclick="goTo('home')" class="flex items-center gap-3">
+                <div class="logo-box w-8 h-8 text-sm">C</div>
+                <span class="text-lg font-extrabold tracking-tighter uppercase">C-Entrepreneurs</span>
+            </button>
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-300/50">&copy; 2024 C-Entrepreneurs ESP. All rights reserved.</p>
+            <button onclick="goTo('home','portfolio')" class="text-sm font-bold text-blue-200 hover:text-brand-orange transition">&larr; Back to Portfolio</button>
+        </div>
+    </footer>
+
+</div><!-- end #page-dighos -->
+
+
+<!-- ════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script>
+    /* ── Router ── */
+    function goTo(page, anchor) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById('page-' + page);
+        target.classList.add('active');
+        target.classList.add('page-enter');
+        setTimeout(() => target.classList.remove('page-enter'), 400);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (anchor) {
+            setTimeout(() => {
+                const el = document.getElementById(anchor);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 50);
         }
+        // Re-run observers for the newly visible page
+        setupObservers();
+        resetProgressBars();
+    }
 
-        // Form Submission
-        const leadForm = document.getElementById('leadForm');
-        const successMessage = document.getElementById('successMessage');
-        const submitBtn = document.getElementById('submitBtn');
+    function closeMobile() {
+        document.getElementById('mobile-menu').classList.add('hidden');
+    }
 
-        leadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
+    /* ── Terms ── */
+    window.toggleTerms = function() {
+        const modal = document.getElementById('termsModal');
+        modal.classList.toggle('hidden');
+        document.body.classList.toggle('overflow-hidden');
+    }
 
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Submitting...";
+    /* ── Process line ── */
+    window.updateLine = function(pct) {
+        const line = document.getElementById('progress-line');
+        if (line) line.style.width = pct + '%';
+    }
 
-            try {
-                const inquiriesRef = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
-                await addDoc(inquiriesRef, {
-                    name: document.getElementById('userName').value,
-                    email: document.getElementById('userEmail').value,
-                    message: document.getElementById('userMessage').value,
-                    termsAccepted: document.getElementById('termsAccepted').checked,
-                    timestamp: serverTimestamp(),
-                    userId: currentUser.uid
-                });
-                leadForm.classList.add('hidden');
-                successMessage.classList.remove('hidden');
-            } catch (error) {
-                console.error(error);
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Error - Try Again";
-            }
-        });
-
-        // Simple Observer for animations
+    /* ── Fade-in observer ── */
+    function setupObservers() {
         const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.page.active .fade-in').forEach(el => observer.observe(el));
+    }
+
+    /* ── Progress bars ── */
+    function resetProgressBars() {
+        document.querySelectorAll('.progress-fill').forEach(bar => {
+            bar.style.animationPlayState = 'paused';
+            bar.style.width = '0%';
+            void bar.offsetWidth; // force reflow
+        });
+        const progressObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100');
-                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    entry.target.querySelectorAll('.progress-fill').forEach(bar => {
+                        bar.style.animationPlayState = 'running';
+                    });
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.page.active .progress-item').forEach(el => progressObserver.observe(el));
+    }
 
-        document.querySelectorAll('section').forEach(s => {
-            s.classList.add('transition-all', 'duration-1000', 'translate-y-10', 'opacity-0');
-            observer.observe(s);
-        });
-    </script>
+    // Init on load
+    setupObservers();
+    resetProgressBars();
+</script>
+
+<!-- Firebase -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBZn3JWi1U0u5EtsQIbyvPYCpHTSc-Dy_Q",
+        authDomain: "c-entrepreneurs-4aaf5.firebaseapp.com",
+        projectId: "c-entrepreneurs-4aaf5",
+        storageBucket: "c-entrepreneurs-4aaf5.firebasestorage.app",
+        messagingSenderId: "479491068986",
+        appId: "1:479491068986:web:ccd193f25274f5c6565103"
+    };
+    const appFirebaseId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let currentUser = null;
+    onAuthStateChanged(auth, (user) => { currentUser = user; });
+    async function initAuth() { try { await signInAnonymously(auth); } catch(e) {} }
+    initAuth();
+
+    const leadForm = document.getElementById('leadForm');
+    const successMessage = document.getElementById('successMessage');
+    const submitBtn = document.getElementById('submitBtn');
+
+    leadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting...";
+        try {
+            const ref = collection(db, 'artifacts', appFirebaseId, 'public', 'data', 'inquiries');
+            await addDoc(ref, {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                message: document.getElementById('userMessage').value,
+                termsAccepted: document.getElementById('termsAccepted').checked,
+                timestamp: serverTimestamp(),
+                userId: currentUser.uid
+            });
+            leadForm.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        } catch (err) {
+            console.error(err);
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Error - Try Again";
+        }
+    });
+</script>
+
 </body>
 </html>
-
-
-
-
-
